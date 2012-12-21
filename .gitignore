@@ -1,3 +1,10 @@
+# Maven / Eclipse specific
+
+.settings
+.project
+.classpath
+**/*/target
+test-output
 *.class
 
 # Package Files #
