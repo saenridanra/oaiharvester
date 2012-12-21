@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
   <name>Parent Project</name>
   <modules>
-  	<module>ui</module>
+  	
   	<module>core</module>
   </modules>
 </project>
