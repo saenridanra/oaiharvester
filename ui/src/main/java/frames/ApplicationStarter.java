@@ -76,7 +76,7 @@ public class ApplicationStarter extends ApplicationWindow {
 	}
 
 	protected Point getInitialSize() {
-		return new Point(500, 375);
+		return new Point(800, 700);
 	}
 
 }
