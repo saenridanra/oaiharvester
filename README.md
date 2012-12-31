@@ -6,10 +6,14 @@
 Run
 
 ```
-mvn gwt:run
+mvn install -P YOUROPERATING SYSTEM*
+
+
+*either : linux, windows, macosx
 ```
 
-and the application starts automatically. From thereon you can view it in your browser.
+After that an executable jar has been created in the folder target which
+you can run.
 
 ## Contributors
 

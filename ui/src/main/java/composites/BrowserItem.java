@@ -2,6 +2,7 @@ package composites;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 
@@ -9,6 +10,10 @@ import api.IHarvester;
 
 import se.kb.oai.pmh.Record;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+
+import dialogs.BrowserItemDetailDialog;
 
 public class BrowserItem extends Composite {
 
@@ -22,7 +27,7 @@ public class BrowserItem extends Composite {
 	 * @param style
 	 */
 	public BrowserItem(Composite parent, int style, IHarvester harvester,
-			Record record) {
+			final Record record) {
 		super(parent, SWT.NONE);
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 
@@ -37,6 +42,14 @@ public class BrowserItem extends Composite {
 		lblName.setText("Name:");
 
 		Button btnDetails = new Button(this, SWT.NONE);
+		btnDetails.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(record != null){
+					new BrowserItemDetailDialog(new Shell(), SWT.DIALOG_TRIM, record).open();
+				}
+			}
+		});
 		btnDetails.setBounds(365, 15, 75, 25);
 		btnDetails.setText("Details");
 

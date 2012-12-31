@@ -52,7 +52,7 @@
 			<id>mac</id>
 			<activation>
 				<os>
-					<name>mac os x</name>
+					<name>macosx</name>
 				</os>
 			</activation>
 			<properties>
