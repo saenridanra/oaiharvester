@@ -43,4 +43,24 @@ public class ProbadoTest implements IHarvesterObserver{
 		System.out.println("Dataincome finished");
 		
 	}
+
+	public void headerIncome(int count) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void headerIncomeFinished() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void headerSize(int size) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void dataSize(int size) {
+		// TODO Auto-generated method stub
+		
+	}
 }

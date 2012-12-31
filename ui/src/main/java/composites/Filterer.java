@@ -4,8 +4,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class Filterer extends Composite {
+import api.IHarvester;
 
+public class Filterer extends Composite {
+	
+	IHarvester harvester;
+	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -14,10 +18,20 @@ public class Filterer extends Composite {
 	public Filterer(Composite parent, int style) {
 		super(parent, style);
 		
-		Label lblBrowser = new Label(this, SWT.NONE);
-		lblBrowser.setBounds(10, 10, 55, 15);
-		lblBrowser.setText("Filterer");
+		if(harvester == null){
+			Label lblError = new Label(this, SWT.NONE);
+			lblError.setBounds(10, 10, 405, 15);
+			lblError.setText("You have not selected a harvester yet. Please create and select one.");
+		}
 
+	}
+
+	public IHarvester getHarvester() {
+		return harvester;
+	}
+
+	public void setHarvester(IHarvester harvester) {
+		this.harvester = harvester;
 	}
 
 	@Override

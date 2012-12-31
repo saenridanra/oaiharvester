@@ -41,4 +41,12 @@ public interface IHarvester {
 	 */
 	public List<Header> listIdentifiers();
 	
+	/**
+	 * @return 
+	 * 
+	 */
+	public void harvestAndHold();
+	
+	public String getMetadataValue(String xpath, Record record);
+	
 }

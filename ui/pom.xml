@@ -10,6 +10,11 @@
 	<name>UI Frontend of the harvester</name>
 
 	<dependencies>
+	    <dependency>
+			<groupId>ukon.dl.oaiharvester</groupId>
+			<artifactId>core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.swinglabs</groupId>
 			<artifactId>swingx</artifactId>
@@ -28,7 +33,6 @@
 			<artifactId>${swt.artifactId}</artifactId>
 			<version>${swt.version}</version>
 		</dependency>
-
 	</dependencies>
 	<profiles>
 		<profile>
