@@ -12,16 +12,6 @@ import org.eclipse.swt.SWT;
 
 import api.IHarvester;
 import api.IPaginatable;
-
-import org.eclipse.swt.widgets.Tree;
-
-import se.kb.oai.pmh.Record;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Browser extends Composite implements IPaginatable {
