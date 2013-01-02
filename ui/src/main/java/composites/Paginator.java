@@ -23,20 +23,28 @@ public class Paginator extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public Paginator(Composite parent, int style, final IPaginatable paginatable,
-			final int maxPage) {
+	public Paginator(Composite parent, int style, IPaginatable paginatable,
+			int maxPage) {
 		super(parent, style);
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-
+		
+		this.paginatable = paginatable;
+		this.maxPage = maxPage;
+		
 		setSize(450, 50);
 		
+		initialize();
+
+	}
+
+	private void initialize() {
 		Button prev = new Button(this, SWT.NONE);
 		prev.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				if (currPage > 0) {
 					currPage--;
-					pages.setText("Page " + currPage + " of " + maxPage);
+					pages.setText("Page " + (currPage + 1) + " of " + (maxPage + 1));
 					paginatable.prev();
 				}
 			}
@@ -55,7 +63,7 @@ public class Paginator extends Composite {
 			public void widgetSelected(SelectionEvent arg0) {
 				if (currPage < maxPage) {
 					currPage++;
-					pages.setText("Page " + currPage + " of " + maxPage);
+					pages.setText("Page " + (currPage + 1) + " of " + (maxPage + 1));
 					paginatable.next();
 				}
 			}
@@ -65,11 +73,17 @@ public class Paginator extends Composite {
 
 		Label label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setBounds(0, 41, 450, 2);
-
 	}
 
 	@Override
 	protected void checkSubclass() {
 
+	}
+	
+	public void setMaxPage(int maxPage){
+		this.currPage = 0;
+		this.maxPage = maxPage;
+		pages.setText("Page " + (currPage + 1) + " of " + (this.maxPage + 1));
+		
 	}
 }

@@ -38,7 +38,7 @@ public class BrowserItem extends Composite {
 
 		Label lblName = new Label(this, SWT.NONE);
 		lblName.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblName.setBounds(10, 20, 55, 15);
+		lblName.setBounds(10, 20, 47, 15);
 		lblName.setText("Name:");
 
 		Button btnDetails = new Button(this, SWT.NONE);
@@ -58,7 +58,7 @@ public class BrowserItem extends Composite {
 
 		Label label_1 = new Label(this, SWT.NONE);
 		label_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		label_1.setBounds(58, 20, 265, 15);
+		label_1.setBounds(72, 20, 287, 15);
 
 		try {
 			label_1.setText(harvester.getMetadataValue("title", record));

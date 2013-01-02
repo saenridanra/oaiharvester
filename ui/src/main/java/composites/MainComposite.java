@@ -29,6 +29,7 @@ public class MainComposite extends Composite {
 	private Browser browser;
 	private ScrolledComposite browserScroller;
 	private Filterer filterer;
+	private ScrolledComposite filtererScroller;
 	private Visualizer visualizer;
 
 	private List harvesterUiList;
@@ -97,7 +98,7 @@ public class MainComposite extends Composite {
 		tbtmBrowsing.setText("Browsing");
 		browserScroller = new ScrolledComposite(tabFolder, SWT.H_SCROLL
 		        | SWT.V_SCROLL);
-		browserScroller.setMinSize(500, 500);
+		browserScroller.setMinSize(500, 700);
 		browser = new Browser(browserScroller, SWT.NONE);
 		browserScroller.setContent(browser);
 		browserScroller.setExpandVertical(true);
@@ -107,8 +108,14 @@ public class MainComposite extends Composite {
 		// Setting the filterer content
 		TabItem tbtmFiltering = new TabItem(tabFolder, SWT.NONE);
 		tbtmFiltering.setText("Filtering");
-		filterer = new Filterer(tabFolder, SWT.NONE);
-		tbtmFiltering.setControl(filterer);
+		filtererScroller = new ScrolledComposite(tabFolder, SWT.H_SCROLL
+		        | SWT.V_SCROLL);
+		filtererScroller.setMinSize(500, 950);
+		filterer = new Filterer(filtererScroller, SWT.NONE);
+		filtererScroller.setContent(filterer);
+		filtererScroller.setExpandVertical(true);
+		filtererScroller.setExpandHorizontal(true);
+		tbtmFiltering.setControl(filtererScroller);
 
 		// Setting the visualizer content
 		TabItem tbtmVisualization = new TabItem(tabFolder, SWT.NONE);
@@ -177,6 +184,7 @@ public class MainComposite extends Composite {
 		getParent().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				browser.setHarvester(harvesters.get(selectionIndex));
+				filterer.setHarvester(harvesters.get(selectionIndex));
 			}
 		});
 	}

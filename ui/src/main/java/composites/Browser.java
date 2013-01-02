@@ -22,6 +22,7 @@ public class Browser extends Composite implements IPaginatable {
 
 	List<BrowserItem> items;
 
+	int maxPage = 0;
 	int page = 0;
 
 	/**
@@ -52,7 +53,6 @@ public class Browser extends Composite implements IPaginatable {
 	}
 
 	public void setHarvester(IHarvester harvester) {
-		System.out.println(harvester);
 		this.harvester = harvester;
 		getParent().getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -65,7 +65,9 @@ public class Browser extends Composite implements IPaginatable {
 		if (!lblError.isDisposed()) {
 			lblError.dispose();
 
-			paginator = new Paginator(this, SWT.NONE, this, ((Probado) harvester).getRecords().size() / 10);
+
+			maxPage = ((Probado) harvester).getRecords().size() / 10;
+			paginator = new Paginator(this, SWT.NONE, this, maxPage);
 			paginator.setBounds(0, 0, 450, 50);
 		}
 		if (items.size() > 0) {
@@ -77,12 +79,24 @@ public class Browser extends Composite implements IPaginatable {
 		}
 
 		int i = 0;
-		for (int k = page * 10; k < (page * 10) + 10; k++) {
-			BrowserItem item  = new BrowserItem(this, SWT.NONE, harvester,
-					((Probado) harvester).getRecords().get(k));
-			item.setBounds(0, 50 + (i * 50), 450, 50);
-			items.add(item);
-			i++;
+		
+		if(page != maxPage){
+			for (int k = page * 10; k < (page * 10) + 10; k++) {
+				BrowserItem item  = new BrowserItem(this, SWT.NONE, harvester,
+						((Probado) harvester).getRecords().get(k));
+				item.setBounds(0, 50 + (i * 50), 450, 50);
+				items.add(item);
+				i++;
+			}
+		}
+		else{
+			for (int k = page * 10; k < ((Probado) harvester).getRecords().size(); k++) {
+				BrowserItem item  = new BrowserItem(this, SWT.NONE, harvester,
+						((Probado) harvester).getRecords().get(k));
+				item.setBounds(0, 50 + (i * 50), 450, 50);
+				items.add(item);
+				i++;
+			}
 		}
 
 	}
