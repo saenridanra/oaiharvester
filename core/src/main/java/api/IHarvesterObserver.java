@@ -11,6 +11,10 @@ package api;
  */
 public interface IHarvesterObserver {
 	
+	public void finishedOperation();
+	
+	public void analayzingRecords(int count);
+	
 	public void headerIncome(int count);
 	
 	public void headerIncomeFinished();

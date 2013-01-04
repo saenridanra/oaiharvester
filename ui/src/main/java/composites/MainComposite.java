@@ -1,5 +1,6 @@
 package composites;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -18,9 +19,11 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import api.IHarvester;
+import dialogs.ErrorDialog;
 import dialogs.InfoDialog;
 import dialogs.StartHarvestDialog;
 import dialogs.SuccessfulHarvest;
+import org.eclipse.swt.widgets.Menu;
 
 public class MainComposite extends Composite {
 
@@ -157,6 +160,13 @@ public class MainComposite extends Composite {
 	}
 
 	private boolean save() {
+		for(IHarvester harvester : harvesters){
+			try {
+				harvester.save();
+			} catch (IOException e) {
+				new ErrorDialog(new Shell(), SWT.DIALOG_TRIM, e.getMessage()).open();
+			}
+		}
 		return true;
 	}
 
@@ -164,19 +174,15 @@ public class MainComposite extends Composite {
 		SuccessfulHarvest i = new SuccessfulHarvest(new Shell(),
 				SWT.DIALOG_TRIM);
 		i.open();
+		
+		save();
 
 		updateList();
 	}
 
 	private void updateList() {
 		for (int i = 0; i < harvesters.size(); i++) {
-			switch (i) {
-			case 0:
-				harvesterUiList.add("Probado", 0);
-				break;
-			default:
-				break;
-			}
+			harvesterUiList.add(harvesters.get(i).getUrl(), i);
 		}
 	}
 

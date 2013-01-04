@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import harvesters.Probado;
+import harvesters.Harvester;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -66,7 +66,7 @@ public class Browser extends Composite implements IPaginatable {
 			lblError.dispose();
 
 
-			maxPage = ((Probado) harvester).getRecords().size() / 10;
+			maxPage = ((Harvester) harvester).getRecords().size() / 10;
 			paginator = new Paginator(this, SWT.NONE, this, maxPage);
 			paginator.setBounds(0, 0, 450, 50);
 		}
@@ -83,16 +83,16 @@ public class Browser extends Composite implements IPaginatable {
 		if(page != maxPage){
 			for (int k = page * 10; k < (page * 10) + 10; k++) {
 				BrowserItem item  = new BrowserItem(this, SWT.NONE, harvester,
-						((Probado) harvester).getRecords().get(k));
+						((Harvester) harvester).getRecords().get(k));
 				item.setBounds(0, 50 + (i * 50), 450, 50);
 				items.add(item);
 				i++;
 			}
 		}
 		else{
-			for (int k = page * 10; k < ((Probado) harvester).getRecords().size(); k++) {
+			for (int k = page * 10; k < ((Harvester) harvester).getRecords().size(); k++) {
 				BrowserItem item  = new BrowserItem(this, SWT.NONE, harvester,
-						((Probado) harvester).getRecords().get(k));
+						((Harvester) harvester).getRecords().get(k));
 				item.setBounds(0, 50 + (i * 50), 450, 50);
 				items.add(item);
 				i++;

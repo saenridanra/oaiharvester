@@ -3,7 +3,7 @@ package composites;
 import java.util.ArrayList;
 import java.util.List;
 
-import harvesters.Probado;
+import harvesters.Harvester;
 
 import org.dom4j.Element;
 import org.eclipse.swt.SWT;
@@ -141,11 +141,11 @@ public class Filterer extends Composite implements IPaginatable, ISWTCallback {
 	private void performSearch() {
 		String searchString = searchPartial.getSearchString().toLowerCase();
 		searchedRecords.clear();
-		searchedRecords.addAll(((Probado) harvester).getRecords());
+		searchedRecords.addAll(((Harvester) harvester).getRecords());
 
 		int i = 0;
 		
-		for (Record record : ((Probado) harvester).getRecords()) {
+		for (Record record : ((Harvester) harvester).getRecords()) {
 			boolean contained = false;
 			for (Object e : record.getMetadata().elements()) {
 				if (((Element) e).getText().toLowerCase().contains(searchString)) {
