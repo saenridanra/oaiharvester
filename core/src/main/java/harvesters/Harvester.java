@@ -12,9 +12,17 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamSource;
+
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.io.DocumentResult;
+import org.dom4j.io.DocumentSource;
 
 import se.kb.oai.OAIException;
 import se.kb.oai.pmh.Header;
@@ -24,6 +32,8 @@ import se.kb.oai.pmh.Record;
 import se.kb.oai.pmh.RecordsList;
 import se.kb.oai.pmh.ResumptionToken;
 import se.kb.xml.XPathWrapper;
+import statistics.PieChart;
+import statistics.Histogram;
 import api.IHarvester;
 import api.IHarvesterObserver;
 
@@ -48,7 +58,7 @@ public class Harvester implements IHarvester {
 	Map<String, Integer> licenses;
 	Map<String, Integer> formatExtensions;
 
-	Document statisticsXml;
+	Document statisticsXml, statisticsHtml;
 
 	public Harvester(String url, String savePath) throws IOException {
 		if (!new File(savePath).isDirectory())
@@ -249,6 +259,11 @@ public class Harvester implements IHarvester {
 			elem.addAttribute("id", e.getKey());
 			elem.setText(e.getValue().toString());
 		}
+		
+		PieChart pie = new PieChart("Licenses overview", licenses);
+		File fileLicensesPie = new File(new StringBuilder().append(savePath)
+				.append(File.separator).append("licenses.png").toString());
+		pie.generateImage(300, 250, fileLicensesPie);
 
 		Element datesElement = root.addElement("Dates");
 		for (Entry<String, Integer> e : this.dates.entrySet()) {
@@ -256,6 +271,11 @@ public class Harvester implements IHarvester {
 			elem.addAttribute("id", e.getKey());
 			elem.setText(e.getValue().toString());
 		}
+		
+		Histogram histoDates = new Histogram("\"Documents added on\" overview", dates, 0);
+        File histoDatesFile = new File(new StringBuilder().append(savePath)
+				.append(File.separator).append("dates.png").toString());
+        histoDates.generateImage(500, 500, histoDatesFile);
 
 		Element formatsElement = root.addElement("Formats");
 		for (Entry<String, Integer> e : this.formatExtensions.entrySet()) {
@@ -264,6 +284,34 @@ public class Harvester implements IHarvester {
 			elem.setText(e.getValue().toString());
 		}
 
+		Histogram histoFormats = new Histogram("Documents format overview", formatExtensions, 1);
+        File histoFormatsFile = new File(new StringBuilder().append(savePath)
+				.append(File.separator).append("formats.png").toString());
+        histoFormats.generateImage(500, 500, histoFormatsFile);
+        
+		// load the transformer using JAXP
+		TransformerFactory factory = TransformerFactory.newInstance();
+		Transformer transformer = null;
+		try {
+			transformer = factory.newTransformer(new StreamSource(
+					"src/main/resources/statistics.xsl"));
+		} catch (TransformerConfigurationException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+
+		// now lets style the given document
+		DocumentSource source = new DocumentSource(statisticsXml);
+		DocumentResult result = new DocumentResult();
+		try {
+			transformer.transform(source, result);
+		} catch (TransformerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		// return the transformed document
+		statisticsHtml = result.getDocument();
 	}
 
 	public List<Record> getRecords() {
@@ -301,6 +349,18 @@ public class Harvester implements IHarvester {
 			os = new FileOutputStream(file);
 
 			os.write(statisticsXml.asXML().getBytes());
+
+			os.flush();
+			os.close();
+			
+			file = new File(new StringBuilder().append(savePath)
+					.append(File.separator).append("statistics.html").toString());
+			if (!file.exists())
+				file.createNewFile();
+
+			os = new FileOutputStream(file);
+
+			os.write(statisticsHtml.asXML().getBytes());
 
 			os.flush();
 			os.close();
