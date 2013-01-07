@@ -51,6 +51,15 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>*.xsl</include>
+				</includes>
+				<targetPath>src/main/resources</targetPath>
+			</resource>
+		</resources>
 	</build>
 
 	<profiles>

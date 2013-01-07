@@ -191,6 +191,7 @@ public class MainComposite extends Composite {
 			public void run() {
 				browser.setHarvester(harvesters.get(selectionIndex));
 				filterer.setHarvester(harvesters.get(selectionIndex));
+				visualizer.setHarvester(harvesters.get(selectionIndex));
 			}
 		});
 	}

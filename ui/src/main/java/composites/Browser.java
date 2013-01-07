@@ -65,7 +65,6 @@ public class Browser extends Composite implements IPaginatable {
 		if (!lblError.isDisposed()) {
 			lblError.dispose();
 
-
 			maxPage = ((Harvester) harvester).getRecords().size() / 10;
 			paginator = new Paginator(this, SWT.NONE, this, maxPage);
 			paginator.setBounds(0, 0, 450, 50);
