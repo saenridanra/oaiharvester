@@ -1,4 +1,4 @@
-package statistics;
+package core.statistics;
 
 import java.io.File;
 import java.io.IOException;

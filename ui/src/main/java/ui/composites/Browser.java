@@ -1,18 +1,16 @@
-package composites;
+package ui.composites;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import harvesters.Harvester;
-
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-
-import api.IHarvester;
-import api.IPaginatable;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import ui.api.IPaginatable;
+import core.api.IHarvester;
+import core.harvesters.Harvester;
 
 public class Browser extends Composite implements IPaginatable {
 

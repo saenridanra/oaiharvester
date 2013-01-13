@@ -1,6 +1,5 @@
-package dialogs;
+package ui.dialogs;
 
-import org.eclipse.osgi.internal.resolver.ComputeNodeOrder;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -9,23 +8,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.RowLayout;
 
-public class ErrorDialog extends Dialog {
+public class SuccessfulHarvest extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
-	private String message;
 
 	/**
 	 * Create the dialog.
 	 * @param parent
 	 * @param style
 	 */
-	public ErrorDialog(Shell parent, int style, String message) {
+	public SuccessfulHarvest(Shell parent, int style) {
 		super(parent, style);
-		this.message = message;
-		setText("Error");
+		setText("Successful");
 	}
 
 	/**
@@ -50,33 +46,27 @@ public class ErrorDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
+		shell.setSize(409, 171);
 		shell.setText(getText());
 		
-		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-		rowLayout.marginHeight = 10;
-		rowLayout.marginWidth = 10;
-		rowLayout.spacing = 5;
+		Label lblTheOperationWas = new Label(shell, SWT.WRAP);
+		lblTheOperationWas.setBounds(10, 10, 383, 91);
+		lblTheOperationWas.setText("The operation was successful. You can now browse the harvested data.");
 		
-		shell.setLayout(rowLayout);
-		
-		Label lblMessage = new Label(shell, SWT.WRAP);
-		lblMessage.setText(message);
-		
-		Button btnClose = new Button(shell, SWT.NONE);
-		btnClose.addSelectionListener(new SelectionAdapter() {
+		Button btnOk = new Button(shell, SWT.NONE);
+		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent arg0) {
 				close();
 			}
 		});
-		btnClose.setBounds(359, 236, 75, 25);
-		btnClose.setText("Close");
-
-		shell.setSize(shell.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		btnOk.setBounds(155, 107, 75, 25);
+		btnOk.setText("Ok");
 
 	}
 	
 	private void close(){
 		this.getParent().close();
 	}
+
 }

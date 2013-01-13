@@ -1,20 +1,21 @@
-package composites;
+package ui.composites;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import harvesters.Harvester;
 
 import org.dom4j.Element;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import se.kb.oai.pmh.Record;
+import core.api.IHarvester;
+import core.harvesters.Harvester;
 
-import api.IHarvester;
-import api.IPaginatable;
-import api.ISWTCallback;
+import se.kb.oai.pmh.Record;
+import ui.api.IPaginatable;
+import ui.api.ISWTCallback;
+
 
 public class Filterer extends Composite implements IPaginatable, ISWTCallback {
 

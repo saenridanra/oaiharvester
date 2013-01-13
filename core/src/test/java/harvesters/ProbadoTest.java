@@ -5,10 +5,12 @@ import java.io.IOException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import api.IHarvester;
-import api.IHarvesterObserver;
 
 import com.google.common.io.Files;
+
+import core.api.IHarvester;
+import core.api.IHarvesterObserver;
+import core.harvesters.Harvester;
 
 public class ProbadoTest implements IHarvesterObserver{
 	

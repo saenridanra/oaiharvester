@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import core.statistics.Histogram;
+import core.statistics.PieChart;
+
 public class TestStats {
 
 	/**

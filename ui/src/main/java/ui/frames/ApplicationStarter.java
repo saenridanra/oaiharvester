@@ -1,4 +1,4 @@
-package frames;
+package ui.frames;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
@@ -9,14 +9,25 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-import composites.MainComposite;
+import org.eclipse.swt.events.MouseWheelListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+
+import ui.composites.MainComposite;
 
 public class ApplicationStarter extends ApplicationWindow {
-
+	
+	private Shell shell;
+	private Composite container;
+	
 	public ApplicationStarter(Shell parentShell) {
 		super(parentShell);
+		shell = parentShell;
 		createActions();
 		addToolBar(SWT.NONE);
 		addMenuBar();
@@ -24,21 +35,19 @@ public class ApplicationStarter extends ApplicationWindow {
 	}
 
 	protected Control createContents(Composite parent) {
-		Composite container = new MainComposite(parent, SWT.NONE);
+		container = new MainComposite(parent, SWT.NONE);
+		container.addListener(SWT.Resize, new Listener() {
+			
+			public void handleEvent(Event event) {
+				resize();
+			}
+		});
+		
+		
 		return container;
 	}
 
 	private void createActions() {
-	}
-
-	protected MenuManager createMenuManager() {
-		MenuManager result = new MenuManager("menu");
-		return result;
-	}
-
-	protected ToolBarManager createToolBarManager(int arg) {
-		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT | SWT.WRAP);
-		return toolBarManager;
 	}
 
 	protected StatusLineManager createStatusLineManager() {
@@ -74,9 +83,12 @@ public class ApplicationStarter extends ApplicationWindow {
 		super.configureShell(newShell);
 		newShell.setText("OAI Harvester");
 	}
+	
+	public void resize(){
+		container.setSize(this.getShell().getClientArea().width, this.getShell().getClientArea().height);
+	}
 
 	protected Point getInitialSize() {
 		return new Point(800, 700);
 	}
-
 }

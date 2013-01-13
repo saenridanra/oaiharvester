@@ -1,14 +1,15 @@
-package composites;
+package ui.composites;
 
 import org.eclipse.swt.widgets.Composite;
 
-import api.IPaginatable;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import ui.api.IPaginatable;
 
 public class Paginator extends Composite {
 

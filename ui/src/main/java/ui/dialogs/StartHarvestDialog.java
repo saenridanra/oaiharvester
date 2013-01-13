@@ -1,6 +1,5 @@
-package dialogs;
+package ui.dialogs;
 
-import harvesters.Harvester;
 
 import java.util.List;
 
@@ -16,8 +15,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import api.IHarvester;
-import api.IHarvesterObserver;
+import core.api.IHarvester;
+import core.api.IHarvesterObserver;
+import core.harvesters.Harvester;
+
 
 public class StartHarvestDialog extends Dialog implements IHarvesterObserver {
 
@@ -101,7 +102,7 @@ public class StartHarvestDialog extends Dialog implements IHarvesterObserver {
 		btnCancel.setText("Cancel");
 		
 		Label lblTheUrlOf = new Label(shell, SWT.NONE);
-		lblTheUrlOf.setBounds(10, 10, 171, 15);
+		lblTheUrlOf.setBounds(10, 10, 424, 15);
 		lblTheUrlOf.setText("The url of the harvester");
 		
 		harvesterUrl = new Text(shell, SWT.BORDER);

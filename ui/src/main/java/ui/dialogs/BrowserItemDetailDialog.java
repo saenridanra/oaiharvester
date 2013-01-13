@@ -1,4 +1,4 @@
-package dialogs;
+package ui.dialogs;
 
 import java.util.Collections;
 
@@ -14,8 +14,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.custom.StyledText;
 
 public class BrowserItemDetailDialog extends Dialog {
 
@@ -23,6 +26,8 @@ public class BrowserItemDetailDialog extends Dialog {
 	protected Shell shell;
 	
 	private Record record;
+	private ScrolledComposite scrolledComposite;
+	private StyledText styledText;
 
 	/**
 	 * Create the dialog.
@@ -71,48 +76,29 @@ public class BrowserItemDetailDialog extends Dialog {
 		btnClose.setBounds(359, 336, 75, 25);
 		btnClose.setText("Close");
 		
-		ScrolledComposite scrolledComposite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setBounds(10, 10, 424, 320);
+		scrolledComposite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		scrolledComposite.setBounds(0, 0, 444, 330);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.wrap = true;
-		rowLayout.pack = false;
-		rowLayout.type = SWT.VERTICAL;
-		rowLayout.marginLeft = 5;
-		rowLayout.marginTop = 5;
-		rowLayout.marginRight = 5;
-		rowLayout.marginBottom = 5;
-		rowLayout.spacing = 5;
+		styledText = new StyledText(scrolledComposite, SWT.BORDER);
+		scrolledComposite.setContent(styledText);
+		scrolledComposite.setMinSize(styledText.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		
-		Composite composite = new Composite(scrolledComposite, SWT.NONE);
-		composite.setLayout(rowLayout);
-		scrolledComposite.setContent(composite);
+		StringBuilder output = new StringBuilder();
 		
 		for(Object e : record.getMetadata().elements()){
 			if(e instanceof Element){
-				int anzSpaces = 20 - ((Element) e).getName().length();
+				output.append(((Element) e).getName()).append(":\n").append(((Element) e).getText()).append("\n\n");
 				
-				String spaces = "";
-				for(int i = 0; i < anzSpaces; i++){
-					spaces += " ";
-				}
-				
-				String content = ((Element) e).getName() + ":" + spaces + ((Element) e).getText();
-				
-				Label l = new Label(composite, SWT.NONE);
-				l.setText(content);
-				l.setSize(410, 15);
 			}
 			else{
-				Label l = new Label(composite, SWT.NONE);
-				l.setText("Something went wrong with this element in the metadata.");
-				l.setSize(410, 15);
+				output.append("Something went wrong with this element in the metadata.");
 			}
 		}
 
-		scrolledComposite.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		styledText.setJustify(true);
+		styledText.setText(output.toString());
 
 	}
 }

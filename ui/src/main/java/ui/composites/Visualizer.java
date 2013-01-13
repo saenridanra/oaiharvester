@@ -1,11 +1,14 @@
-package composites;
+package ui.composites;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 
-import api.IHarvester;
+import core.api.IHarvester;
+
 
 public class Visualizer extends Composite {
 	
@@ -22,6 +25,12 @@ public class Visualizer extends Composite {
 	 */
 	public Visualizer(Composite parent, int style) {
 		super(parent, style);
+		
+		this.addListener(SWT.Resize, new Listener() {
+			public void handleEvent(Event event) {
+				resize();
+			}
+		});
 		
 		if(harvester == null){
 			lblError = new Label(this, SWT.NONE);
@@ -49,10 +58,15 @@ public class Visualizer extends Composite {
 			lblError.dispose();
 		}
 		
-		browser = new Browser(this, SWT.V_SCROLL | SWT.H_SCROLL);
-		browser.setSize(527, 495);
+		browser = new Browser(this, SWT.NONE);
+		browser.setSize(this.getClientArea().width, this.getClientArea().height);
 		browser.setUrl(harvester.getSavePath() + "/statistics.html");
 
+	}
+	
+	public void resize(){
+		if(browser == null) return;
+		browser.setSize(this.getClientArea().width, this.getClientArea().height);
 	}
 
 	@Override

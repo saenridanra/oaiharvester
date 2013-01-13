@@ -1,4 +1,4 @@
-package harvesters;
+package core.harvesters;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +24,11 @@ import org.dom4j.Element;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
 
+import core.api.IHarvester;
+import core.api.IHarvesterObserver;
+import core.statistics.Histogram;
+import core.statistics.PieChart;
+
 import se.kb.oai.OAIException;
 import se.kb.oai.pmh.Header;
 import se.kb.oai.pmh.IdentifiersList;
@@ -32,10 +37,6 @@ import se.kb.oai.pmh.Record;
 import se.kb.oai.pmh.RecordsList;
 import se.kb.oai.pmh.ResumptionToken;
 import se.kb.xml.XPathWrapper;
-import statistics.PieChart;
-import statistics.Histogram;
-import api.IHarvester;
-import api.IHarvesterObserver;
 
 public class Harvester implements IHarvester {
 

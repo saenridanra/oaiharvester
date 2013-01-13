@@ -1,13 +1,14 @@
-package composites;
+package ui.composites;
 
 import org.eclipse.swt.widgets.Composite;
 
-import api.ISWTCallback;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+
+import ui.api.ISWTCallback;
 
 public class SearchPartial extends Composite {
 	private Text text;

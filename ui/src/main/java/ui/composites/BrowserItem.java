@@ -1,4 +1,4 @@
-package composites;
+package ui.composites;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -6,14 +6,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 
-import api.IHarvester;
 
 import se.kb.oai.pmh.Record;
+import ui.dialogs.BrowserItemDetailDialog;
+
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-import dialogs.BrowserItemDetailDialog;
+import core.api.IHarvester;
+
 
 public class BrowserItem extends Composite {
 

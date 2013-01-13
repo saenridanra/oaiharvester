@@ -1,4 +1,4 @@
-package dialogs;
+package ui.dialogs;
 
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;

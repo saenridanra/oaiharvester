@@ -1,4 +1,4 @@
-package api;
+package core.api;
 
 import java.io.IOException;
 import java.util.List;

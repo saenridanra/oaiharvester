@@ -1,4 +1,4 @@
-package composites;
+package ui.composites;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,24 +10,32 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import api.IHarvester;
-import dialogs.ErrorDialog;
-import dialogs.InfoDialog;
-import dialogs.StartHarvestDialog;
-import dialogs.SuccessfulHarvest;
 import org.eclipse.swt.widgets.Menu;
+
+import core.api.IHarvester;
+
+import ui.dialogs.ErrorDialog;
+import ui.dialogs.InfoDialog;
+import ui.dialogs.StartHarvestDialog;
+import ui.dialogs.SuccessfulHarvest;
 
 public class MainComposite extends Composite {
 
+	private Composite parent;
+	
 	private java.util.List<IHarvester> harvesters;
+	
+	private TabFolder tabFolder;
 
 	private Browser browser;
 	private ScrolledComposite browserScroller;
@@ -39,10 +47,22 @@ public class MainComposite extends Composite {
 
 	public MainComposite(Composite arg0, int arg1) {
 		super(arg0, SWT.NONE);
+		parent = arg0;
 
 		initialize();
 
 		setLayout(null);
+		
+		this.addListener(SWT.Resize, new Listener() {
+			public void handleEvent(Event event) {
+				tabFolder.setSize(parent.getShell().getClientArea().width - 255, parent.getShell().getClientArea().height - 90);
+				browser.setSize(tabFolder.getClientArea().width-30, tabFolder.getClientArea().height-30);
+				filterer.setSize(tabFolder.getClientArea().width-30, tabFolder.getClientArea().height-30);
+				visualizer.setSize(tabFolder.getClientArea().width-30, tabFolder.getClientArea().height-30);
+				browserScroller.setMinSize(tabFolder.getClientArea().width, browser.getSize().y);
+				filtererScroller.setMinSize(tabFolder.getClientArea().width, filterer.getSize().y);
+			}
+		});
 
 		ToolBar toolBar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
 		toolBar.setBounds(10, 10, 756, 23);
@@ -79,9 +99,9 @@ public class MainComposite extends Composite {
 		Label label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setBounds(10, 112, 223, 2);
 
-		Label label_1 = new Label(this, SWT.NONE);
+		Label label_1 = new Label(this, SWT.CENTER);
 		label_1.setText("Harvesters");
-		label_1.setBounds(90, 91, 55, 15);
+		label_1.setBounds(10, 91, 223, 15);
 
 		harvesterUiList = new List(this, SWT.BORDER | SWT.V_SCROLL);
 		harvesterUiList.addSelectionListener(new SelectionAdapter() {
@@ -90,18 +110,19 @@ public class MainComposite extends Composite {
 				updateTabs(harvesterUiList.getSelectionIndex());
 			}
 		});
-		harvesterUiList.setBounds(10, 120, 223, 446);
+		harvesterUiList.setBounds(10, 120, 225, 446);
 
-		TabFolder tabFolder = new TabFolder(this, SWT.NONE);
+		tabFolder = new TabFolder(this, SWT.NONE);
 		tabFolder.setLayout(new FillLayout());
-		tabFolder.setBounds(239, 71, 527, 495);
+		tabFolder.setLocation(235, 70);
+		tabFolder.setSize(this.getClientArea().width - 255, this.getClientArea().height - 90);
 
 		// Setting the browser content
 		TabItem tbtmBrowsing = new TabItem(tabFolder, SWT.NONE);
 		tbtmBrowsing.setText("Browsing");
 		browserScroller = new ScrolledComposite(tabFolder, SWT.H_SCROLL
 		        | SWT.V_SCROLL);
-		browserScroller.setMinSize(500, 700);
+		browserScroller.setMinSize(tabFolder.getClientArea().width, tabFolder.getClientArea().height);
 		browser = new Browser(browserScroller, SWT.NONE);
 		browserScroller.setContent(browser);
 		browserScroller.setExpandVertical(true);
@@ -113,7 +134,7 @@ public class MainComposite extends Composite {
 		tbtmFiltering.setText("Filtering");
 		filtererScroller = new ScrolledComposite(tabFolder, SWT.H_SCROLL
 		        | SWT.V_SCROLL);
-		filtererScroller.setMinSize(500, 950);
+		filtererScroller.setMinSize(tabFolder.getClientArea().width, tabFolder.getClientArea().height);
 		filterer = new Filterer(filtererScroller, SWT.NONE);
 		filtererScroller.setContent(filterer);
 		filtererScroller.setExpandVertical(true);
