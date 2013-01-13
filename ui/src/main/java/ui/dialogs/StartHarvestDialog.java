@@ -39,6 +39,8 @@ public class StartHarvestDialog extends Dialog implements IHarvesterObserver {
 	
 	private Text harvesterUrl;
 	private Text savePath;
+	private Label lblTypeInThe;
+	private Text metadataFormat;
 
 	/**
 	 * Create the dialog.
@@ -109,11 +111,11 @@ public class StartHarvestDialog extends Dialog implements IHarvesterObserver {
 		harvesterUrl.setBounds(10, 31, 424, 21);
 		
 		Label lblWhereDoYou = new Label(shell, SWT.NONE);
-		lblWhereDoYou.setBounds(10, 78, 424, 15);
+		lblWhereDoYou.setBounds(10, 102, 424, 15);
 		lblWhereDoYou.setText("Where do you want to save your harvested data?");
 		
 		savePath = new Text(shell, SWT.BORDER);
-		savePath.setBounds(10, 99, 424, 21);
+		savePath.setBounds(10, 123, 424, 21);
 		
 		Button btnChoose = new Button(shell, SWT.NONE);
 		btnChoose.addSelectionListener(new SelectionAdapter() {
@@ -131,7 +133,14 @@ public class StartHarvestDialog extends Dialog implements IHarvesterObserver {
 			}
 		});
 		btnChoose.setImage(SWTResourceManager.getImage(StartHarvestDialog.class, "/org/jdesktop/swingx/plaf/basic/resources/search.gif"));
-		btnChoose.setBounds(359, 126, 75, 25);
+		btnChoose.setBounds(359, 150, 75, 25);
+		
+		lblTypeInThe = new Label(shell, SWT.NONE);
+		lblTypeInThe.setBounds(10, 64, 261, 15);
+		lblTypeInThe.setText("Type in the metadataformat (e.g. dc)");
+		
+		metadataFormat = new Text(shell, SWT.BORDER);
+		metadataFormat.setBounds(359, 58, 76, 21);
 
 	}
 
@@ -139,6 +148,7 @@ public class StartHarvestDialog extends Dialog implements IHarvesterObserver {
 		IHarvester harvester = null;
 		try {
 			harvester = new Harvester(harvesterUrl.getText(), savePath.getText());
+			((Harvester) harvester).setMetadataFormat(metadataFormat.getText());
 		} catch (Exception e) {
 			ErrorDialog dialog = new ErrorDialog(new Shell(), SWT.DIALOG_TRIM, e.getMessage());
 			dialog.open();

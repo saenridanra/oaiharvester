@@ -3,6 +3,8 @@ package core.api;
 import java.io.IOException;
 import java.util.List;
 
+import org.dom4j.Element;
+
 import se.kb.oai.pmh.Header;
 import se.kb.oai.pmh.Record;
 
@@ -56,6 +58,10 @@ public interface IHarvester {
 	 * @return returns the value as a string
 	 */
 	public String getMetadataValue(String xpath, Record record);
+	
+	public Element getElement(String elem, Record record);
+	
+	public String getMetadataFormat();
 	
 	/**
 	 * 

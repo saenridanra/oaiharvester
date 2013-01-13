@@ -6,9 +6,10 @@
 Run
 
 ```
-mvn assembly:single -P YOUROPERATING SYSTEM*
-	*either : linux, windows, macosx
-	 e.g. for windows mvn assembly:single -P windows
+mvn assembly:assembly
+
+	* The program will find out on which platform you are on and make
+		sure to use the correct swt libraries.
 ```
 
 After that an executable jar has been created in the folder target which

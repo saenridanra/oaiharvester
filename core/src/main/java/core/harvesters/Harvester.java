@@ -51,7 +51,7 @@ public class Harvester implements IHarvester {
 
 	private static final String RESUMPTION_TOKEN_XPATH = "*/oai:resumptionToken";
 
-	String url, savePath;
+	private String url, savePath, metadataFormat;
 
 	int documentCount;
 
@@ -77,6 +77,10 @@ public class Harvester implements IHarvester {
 	public String getMetadataValue(String elem, Record record) {
 		return ((Element) record.getMetadata().elements(elem).get(0)).getText();
 	}
+	
+	public Element getElement(String elem, Record record) {
+		return ((Element) record.getMetadata().elements(elem).get(0));
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -85,7 +89,7 @@ public class Harvester implements IHarvester {
 		Record r = null;
 
 		try {
-			r = server.getRecord(identifier, "dc");
+			r = server.getRecord(identifier, metadataFormat);
 		} catch (OAIException e) {
 		}
 		return r;
@@ -97,9 +101,10 @@ public class Harvester implements IHarvester {
 	public List<Record> listAllRecords() {
 		List<Record> list = new ArrayList<Record>();
 
+		int c = 0;
 		try {
 			ResumptionToken token;
-			RecordsList tmpList = server.listRecords("dc");
+			RecordsList tmpList = server.listRecords(metadataFormat);
 			token = tmpList.getResumptionToken();
 
 			Element root = tmpList.getResponse().getRootElement();
@@ -108,14 +113,21 @@ public class Harvester implements IHarvester {
 			xpath.addNamespace(OAI_NS_PREFIX, OAI_NS_URI);
 			Element e = xpath.selectSingleElement(RESUMPTION_TOKEN_XPATH);
 
-			documentCount = Integer.valueOf(
-					e.attributeValue("completeListSize")).intValue();
-			observer.dataSize(documentCount);
+			try{
+				documentCount = Integer.valueOf(
+						e.attributeValue("completeListSize")).intValue();
+				observer.dataSize(documentCount);
+			}
+			catch(Exception ee){
+				observer.dataSize(0);
+			}
 
 			list.addAll(tmpList.asList());
 
 			if (observer != null) {
 				observer.dataIncome(list.size());
+				
+				c += list.size();
 			}
 
 			/**
@@ -133,6 +145,10 @@ public class Harvester implements IHarvester {
 		} catch (OAIException e) {
 			e.printStackTrace();
 		}
+		
+		if(metadataFormat.equals("p3dm")){
+			observer.dataSize(c);
+		}
 
 		observer.dataIncomeFinished();
 
@@ -147,17 +163,21 @@ public class Harvester implements IHarvester {
 
 		try {
 			ResumptionToken token;
-			IdentifiersList tmpList = server.listIdentifiers("dc");
+			IdentifiersList tmpList = server.listIdentifiers(metadataFormat);
 			token = tmpList.getResumptionToken();
-
 			Element root = tmpList.getResponse().getRootElement();
 
 			XPathWrapper xpath = new XPathWrapper(root);
 			xpath.addNamespace(OAI_NS_PREFIX, OAI_NS_URI);
 			Element e = xpath.selectSingleElement(RESUMPTION_TOKEN_XPATH);
 
-			observer.headerSize(Integer.valueOf(
-					e.attributeValue("completeListSize")).intValue());
+			try{
+				observer.headerSize(Integer.valueOf(
+						e.attributeValue("completeListSize")).intValue());
+			}
+			catch(Exception ee){
+				observer.headerSize(0);
+			}
 
 			list.addAll(tmpList.asList());
 
@@ -198,7 +218,7 @@ public class Harvester implements IHarvester {
 		Callable<Void> callable = new Callable<Void>() {
 			public Void call() throws Exception {
 				System.out.println("Callable called");
-				identifiers = listIdentifiers();
+				//identifiers = listIdentifiers();
 				System.out.println("First step finished");
 				records = listAllRecords();
 				System.out.println("Finished harvesting");
@@ -214,39 +234,80 @@ public class Harvester implements IHarvester {
 
 	private void createStatistics() {
 		
-		int i = 0;
-		for (Record record : records) {
-			observer.analayzingRecords(i);
-			
-			String license = getMetadataValue("rights", record);
-			String formatExtension = getMetadataValue("format", record);
-			String date = getMetadataValue("date", record);
+		if(metadataFormat.equals("dc")){
+			int i = 0;
+			for (Record record : records) {
+				observer.analayzingRecords(i);
+				
+				String license = getMetadataValue("rights", record);
+				String formatExtension = getMetadataValue("format", record);
+				String date = getMetadataValue("date", record);
 
-			if (licenses.containsKey(license)) {
-				int newValue = licenses.get(license) + 1;
-				licenses.remove(license);
-				licenses.put(license, newValue);
-			} else {
-				licenses.put(license, 1);
-			}
+				if (licenses.containsKey(license)) {
+					int newValue = licenses.get(license) + 1;
+					licenses.remove(license);
+					licenses.put(license, newValue);
+				} else {
+					licenses.put(license, 1);
+				}
 
-			if (formatExtensions.containsKey(formatExtension)) {
-				int newValue = formatExtensions.get(formatExtension) + 1;
-				formatExtensions.remove(formatExtension);
-				formatExtensions.put(formatExtension, newValue);
-			} else {
-				formatExtensions.put(formatExtension, 1);
-			}
+				if (formatExtensions.containsKey(formatExtension)) {
+					int newValue = formatExtensions.get(formatExtension) + 1;
+					formatExtensions.remove(formatExtension);
+					formatExtensions.put(formatExtension, newValue);
+				} else {
+					formatExtensions.put(formatExtension, 1);
+				}
 
-			if (dates.containsKey(date)) {
-				int newValue = dates.get(date) + 1;
-				dates.remove(date);
-				dates.put(date, newValue);
-			} else {
-				dates.put(date, 1);
+				if (dates.containsKey(date)) {
+					int newValue = dates.get(date) + 1;
+					dates.remove(date);
+					dates.put(date, newValue);
+				} else {
+					dates.put(date, 1);
+				}
+				
+				i++;
 			}
-			
-			i++;
+		}
+		else if(metadataFormat.equals("p3dm")){
+			int i = 0;
+			for (Record record : records) {
+				observer.analayzingRecords(i);
+				
+				String license = getElement("LICENSE", record).attributeValue("NAME");
+				String formatExtension = getElement("MODELFILES", record).element("MODELFILE").elementText("EXTENSION");
+				String date = getElement("DATES", record).element("DATEAVAILABLE").getText();
+
+				if (licenses.containsKey(license)) {
+					int newValue = licenses.get(license) + 1;
+					licenses.remove(license);
+					licenses.put(license, newValue);
+				} else {
+					licenses.put(license, 1);
+				}
+
+				if (formatExtensions.containsKey(formatExtension)) {
+					int newValue = formatExtensions.get(formatExtension) + 1;
+					formatExtensions.remove(formatExtension);
+					formatExtensions.put(formatExtension, newValue);
+				} else {
+					formatExtensions.put(formatExtension, 1);
+				}
+
+				if (dates.containsKey(date)) {
+					int newValue = dates.get(date) + 1;
+					dates.remove(date);
+					dates.put(date, newValue);
+				} else {
+					dates.put(date, 1);
+				}
+				
+				i++;
+			}
+		}
+		else{
+			return;
 		}
 
 		statisticsXml = DocumentHelper.createDocument();
@@ -382,6 +443,14 @@ public class Harvester implements IHarvester {
 
 	public void setSavePath(String savePath) {
 		this.savePath = savePath;
+	}
+
+	public String getMetadataFormat() {
+		return metadataFormat;
+	}
+
+	public void setMetadataFormat(String metadataFormat) {
+		this.metadataFormat = metadataFormat;
 	}
 
 }
