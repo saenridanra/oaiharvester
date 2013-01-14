@@ -77,7 +77,7 @@ public class Harvester implements IHarvester {
 	public String getMetadataValue(String elem, Record record) {
 		return ((Element) record.getMetadata().elements(elem).get(0)).getText();
 	}
-	
+
 	public Element getElement(String elem, Record record) {
 		return ((Element) record.getMetadata().elements(elem).get(0));
 	}
@@ -113,12 +113,11 @@ public class Harvester implements IHarvester {
 			xpath.addNamespace(OAI_NS_PREFIX, OAI_NS_URI);
 			Element e = xpath.selectSingleElement(RESUMPTION_TOKEN_XPATH);
 
-			try{
+			try {
 				documentCount = Integer.valueOf(
 						e.attributeValue("completeListSize")).intValue();
 				observer.dataSize(documentCount);
-			}
-			catch(Exception ee){
+			} catch (Exception ee) {
 				observer.dataSize(0);
 			}
 
@@ -126,7 +125,7 @@ public class Harvester implements IHarvester {
 
 			if (observer != null) {
 				observer.dataIncome(list.size());
-				
+
 				c += list.size();
 			}
 
@@ -145,8 +144,8 @@ public class Harvester implements IHarvester {
 		} catch (OAIException e) {
 			e.printStackTrace();
 		}
-		
-		if(metadataFormat.equals("p3dm")){
+
+		if (metadataFormat.equals("p3dm")) {
 			observer.dataSize(c);
 		}
 
@@ -171,11 +170,10 @@ public class Harvester implements IHarvester {
 			xpath.addNamespace(OAI_NS_PREFIX, OAI_NS_URI);
 			Element e = xpath.selectSingleElement(RESUMPTION_TOKEN_XPATH);
 
-			try{
+			try {
 				observer.headerSize(Integer.valueOf(
 						e.attributeValue("completeListSize")).intValue());
-			}
-			catch(Exception ee){
+			} catch (Exception ee) {
 				observer.headerSize(0);
 			}
 
@@ -218,7 +216,7 @@ public class Harvester implements IHarvester {
 		Callable<Void> callable = new Callable<Void>() {
 			public Void call() throws Exception {
 				System.out.println("Callable called");
-				//identifiers = listIdentifiers();
+				// identifiers = listIdentifiers();
 				System.out.println("First step finished");
 				records = listAllRecords();
 				System.out.println("Finished harvesting");
@@ -233,12 +231,12 @@ public class Harvester implements IHarvester {
 	}
 
 	private void createStatistics() {
-		
-		if(metadataFormat.equals("dc")){
+
+		if (metadataFormat.equals("dc")) {
 			int i = 0;
 			for (Record record : records) {
 				observer.analayzingRecords(i);
-				
+
 				String license = getMetadataValue("rights", record);
 				String formatExtension = getMetadataValue("format", record);
 				String date = getMetadataValue("date", record);
@@ -266,18 +264,20 @@ public class Harvester implements IHarvester {
 				} else {
 					dates.put(date, 1);
 				}
-				
+
 				i++;
 			}
-		}
-		else if(metadataFormat.equals("p3dm")){
+		} else if (metadataFormat.equals("p3dm")) {
 			int i = 0;
 			for (Record record : records) {
 				observer.analayzingRecords(i);
-				
-				String license = getElement("LICENSE", record).attributeValue("NAME");
-				String formatExtension = getElement("MODELFILES", record).element("MODELFILE").elementText("EXTENSION");
-				String date = getElement("DATES", record).element("DATEAVAILABLE").getText();
+
+				String license = getElement("LICENSE", record).attributeValue(
+						"NAME");
+				String formatExtension = getElement("MODELFILES", record)
+						.element("MODELFILE").elementText("EXTENSION");
+				String date = getElement("DATES", record).element(
+						"DATEAVAILABLE").getText();
 
 				if (licenses.containsKey(license)) {
 					int newValue = licenses.get(license) + 1;
@@ -302,11 +302,10 @@ public class Harvester implements IHarvester {
 				} else {
 					dates.put(date, 1);
 				}
-				
+
 				i++;
 			}
-		}
-		else{
+		} else {
 			return;
 		}
 
@@ -321,7 +320,7 @@ public class Harvester implements IHarvester {
 			elem.addAttribute("id", e.getKey());
 			elem.setText(e.getValue().toString());
 		}
-		
+
 		PieChart pie = new PieChart("Licenses overview", licenses);
 		File fileLicensesPie = new File(new StringBuilder().append(savePath)
 				.append(File.separator).append("licenses.png").toString());
@@ -333,11 +332,12 @@ public class Harvester implements IHarvester {
 			elem.addAttribute("id", e.getKey());
 			elem.setText(e.getValue().toString());
 		}
-		
-		Histogram histoDates = new Histogram("\"Documents added on\" overview", dates, 0);
-        File histoDatesFile = new File(new StringBuilder().append(savePath)
+
+		Histogram histoDates = new Histogram("\"Documents added on\" overview",
+				dates, 0);
+		File histoDatesFile = new File(new StringBuilder().append(savePath)
 				.append(File.separator).append("dates.png").toString());
-        histoDates.generateImage(500, 500, histoDatesFile);
+		histoDates.generateImage(500, 500, histoDatesFile);
 
 		Element formatsElement = root.addElement("Formats");
 		for (Entry<String, Integer> e : this.formatExtensions.entrySet()) {
@@ -346,17 +346,20 @@ public class Harvester implements IHarvester {
 			elem.setText(e.getValue().toString());
 		}
 
-		Histogram histoFormats = new Histogram("Documents format overview", formatExtensions, 1);
-        File histoFormatsFile = new File(new StringBuilder().append(savePath)
+		Histogram histoFormats = new Histogram("Documents format overview",
+				formatExtensions, 1);
+		File histoFormatsFile = new File(new StringBuilder().append(savePath)
 				.append(File.separator).append("formats.png").toString());
-        histoFormats.generateImage(500, 500, histoFormatsFile);
-        
+		histoFormats.generateImage(500, 500, histoFormatsFile);
+
 		// load the transformer using JAXP
 		TransformerFactory factory = TransformerFactory.newInstance();
 		Transformer transformer = null;
 		try {
-			transformer = factory.newTransformer(new StreamSource(
-					"src/main/resources/statistics.xsl"));
+			transformer = factory
+					.newTransformer(new StreamSource(getClass()
+							.getResourceAsStream(
+									"/src/main/resources/statistics.xsl")));
 		} catch (TransformerConfigurationException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -391,7 +394,8 @@ public class Harvester implements IHarvester {
 			FileOutputStream os;
 			for (int i = 0; i < records.size(); i += 10) {
 				file = new File(new StringBuilder().append(savePath)
-						.append(File.separator).append("records" + i + "to" + (i+10) + ".xml")
+						.append(File.separator)
+						.append("records" + i + "to" + (i + 10) + ".xml")
 						.toString());
 				if (!file.exists())
 					file.createNewFile();
@@ -414,9 +418,10 @@ public class Harvester implements IHarvester {
 
 			os.flush();
 			os.close();
-			
+
 			file = new File(new StringBuilder().append(savePath)
-					.append(File.separator).append("statistics.html").toString());
+					.append(File.separator).append("statistics.html")
+					.toString());
 			if (!file.exists())
 				file.createNewFile();
 
